@@ -31,29 +31,29 @@ jobs:
       run: |
         mkdir -p bin dist
         go build -o bin/passy main.go
-        fpm -s dir -t deb -n passy -v ${{ github.ref_name }} bin/passy=/usr/local/bin/passy -p dist/passy_${{ github.ref_name }}_amd64.deb
-        fpm -s dir -t rpm -n passy -v ${{ github.ref_name }} bin/passy=/usr/local/bin/passy -p dist/passy-${{ github.ref_name }}.x86_64.rpm
+        fpm -s dir -t deb -n passy -v ${{ github.ref_name }} -p dist/passy_${{ github.ref_name }}_amd64.deb bin/passy=/usr/local/bin/passy
+        fpm -s dir -t rpm -n passy -v ${{ github.ref_name }} -p dist/passy-${{ github.ref_name }}.x86_64.rpm bin/passy=/usr/local/bin/passy
 
     - name: Push .deb to passy-apt-repo
       run: |
-        git clone https://x-access-token:${{ secrets.APT_PUSH_TOKEN }}@github.com/OcheOps/passy-apt-repo.git
+        git clone https://x-access-token:${{ secrets.REPO_PUSH_TOKEN }}@github.com/OcheOps/passy-apt-repo.git
         cp dist/*.deb passy-apt-repo/pool/main/p/passy/
         cd passy-apt-repo
         dpkg-scanpackages pool /dev/null | gzip -9c > Packages.gz
         git config user.name "github-actions"
         git config user.email "actions@github.com"
         git add .
-        git commit -m "Add .deb for ${{ github.ref_name }}"
+        git commit -m "Add .deb for ${{ github.ref_name }}" || echo "No changes to commit"
         git push
 
     - name: Push .rpm to passy-rpm-repo
       run: |
-        git clone https://x-access-token:${{ secrets.RPM_PUSH_TOKEN }}@github.com/OcheOps/passy-rpm-repo.git
+        git clone https://x-access-token:${{ secrets.REPO_PUSH_TOKEN }}@github.com/OcheOps/passy-rpm-repo.git
         cp dist/*.rpm passy-rpm-repo/
         cd passy-rpm-repo
         createrepo .
         git config user.name "github-actions"
         git config user.email "actions@github.com"
         git add .
-        git commit -m "Add .rpm for ${{ github.ref_name }}"
+        git commit -m "Add .rpm for ${{ github.ref_name }}" || echo "No changes to commit"
         git push
