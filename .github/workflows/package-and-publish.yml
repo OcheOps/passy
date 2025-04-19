@@ -37,6 +37,7 @@ jobs:
     - name: Push .deb to passy-apt-repo
       run: |
         git clone https://x-access-token:${{ secrets.REPO_PUSH_TOKEN }}@github.com/OcheOps/passy-apt-repo.git
+        mkdir -p passy-apt-repo/pool/main/p/passy
         cp dist/*.deb passy-apt-repo/pool/main/p/passy/
         cd passy-apt-repo
         dpkg-scanpackages pool /dev/null | gzip -9c > Packages.gz
@@ -49,7 +50,8 @@ jobs:
     - name: Push .rpm to passy-rpm-repo
       run: |
         git clone https://x-access-token:${{ secrets.REPO_PUSH_TOKEN }}@github.com/OcheOps/passy-rpm-repo.git
-        cp dist/*.rpm passy-rpm-repo/
+        mkdir -p passy-rpm-repo/packages
+        cp dist/*.rpm passy-rpm-repo/packages/
         cd passy-rpm-repo
         createrepo .
         git config user.name "github-actions"
