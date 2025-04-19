@@ -8,6 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -32,7 +33,7 @@ jobs:
         fpm -s dir -t rpm -n passy -v ${{ github.ref_name }} bin/passy=/usr/local/bin/passy -p dist/passy-${{ github.ref_name }}.x86_64.rpm
 
     - name: Upload built packages
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: passy-packages
         path: dist/
