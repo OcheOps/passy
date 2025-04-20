@@ -1,78 +1,117 @@
-# Passy 🔐
+# 🔐 Passy — A Simple Terminal Password Manager
 
-A lightweight, secure, and offline password manager for the terminal — built with Go.
+[![Build & Distribute](https://github.com/OcheOps/passy/actions/workflows/package-and-publish.yml/badge.svg)](https://github.com/OcheOps/passy/actions)
 
----
-
-## ✅ Features
-
-- Add, get, list, delete, and update credentials
-- Stores both **username** and **password**
-- AES-256 encrypted vault file
-- Master password authentication
-- Secure password generation
-- Clipboard copy (no terminal echo)
-- Export credentials to CSV
+Passy is a lightweight, secure, and terminal-first password manager written in Go.  
+It supports clipboard copying, username/password storage, entry updates, file export, and more — all in a fast CLI interface.
 
 ---
 
-## 🚀 Commands
+## ✨ Features
 
-| Command                | Description                           |
-|------------------------|---------------------------------------|
-| `passy add <name>`     | Add a new entry                       |
-| `passy get <name>`     | Retrieve and copy password            |
-| `passy list`           | Show all entry names                  |
-| `passy delete <name>`  | Delete an entry                       |
-| `passy gen <name>`     | Generate random password              |
-| `passy update <name>`  | Update username or password           |
-| `passy export <file>`  | Export all credentials to CSV         |
+- 🔒 AES-GCM encrypted local storage
+- 📋 Clipboard integration (with auto-clear)
+- 📅 Export vault to plaintext
+- 👤 Stores username + password per entry
+- 🧄 Simple file-based vault (`~/.passy-vault.json`)
+- 📦 Installable via `apt` or `dnf` package managers
+- ⚡ Cross-platform binaries available for Windows, Linux, and macOS
 
 ---
 
-## 🧪 Example
+## 🚀 Installation
 
+### 🐧 Linux (.deb / .rpm)
+
+#### 📦 APT (Debian/Ubuntu)
 ```bash
-$ passy add github
-🔑 Master password: ********
-👤 Enter username: johndoe
-🔐 Enter password: ********
-✅ Entry saved.
+echo "deb [trusted=yes] https://ocheops.github.io/passy-apt-repo/ ./" | sudo tee /etc/apt/sources.list.d/passy.list
+sudo apt update
+sudo apt install passy
+```
 
-$ passy get github
-🔑 Master password: ********
-👤 Username: johndoe
-📋 Password copied to clipboard!
-
-$ passy export mysecrets.csv
-✅ Exported to: mysecrets.csv
+#### 📦 DNF (Fedora/RHEL)
+```bash
+sudo dnf config-manager --add-repo https://ocheops.github.io/passy-rpm-repo/passsy.repo
+sudo dnf install passy
 ```
 
 ---
 
-## 🛠️ Install
+### 💻 Binaries
 
+Download prebuilt binaries from [Releases](https://github.com/OcheOps/passy/releases):
+
+```bash
+# Example for Linux
+wget https://github.com/OcheOps/passy/releases/download/v1.2.0/passy-linux-amd64
+chmod +x passy-linux-amd64
+sudo mv passy-linux-amd64 /usr/local/bin/passy
+```
+
+---
+
+## 🥪 Usage
+
+```bash
+# Add a new password
+passy add github
+
+# Retrieve an entry and copy password to clipboard
+passy get github
+
+# List all entries
+passy list
+
+# Update an entry
+passy update github
+
+# Delete an entry
+passy delete github
+
+# Export vault to file
+passy export vault.txt
+```
+
+---
+
+## 📁 File Location
+
+All entries are stored securely in:
+
+```
+~/.passy-vault.json
+```
+
+Encrypted using AES-GCM with your generated key.
+
+---
+
+## ⚙️ Development
+
+### Build locally:
 ```bash
 go build -o passy main.go
-./passy
 ```
 
-> Requires: Go 1.18+, `golang.design/x/clipboard`, and `github.com/spf13/cobra`
+### Test:
+```bash
+go run main.go list
+```
 
 ---
 
-## 🔒 Security Note
+## ❤️ Contribute
 
-Your vault is encrypted with AES-256 using your master password as a key. Make sure you do **not lose** your master password.
-
----
-
-## 📦 TODO
-
-- GUI shell (maybe with TUI or WebView)
-- Cloud backup (opt-in)
-- Touch ID/FaceID support
+Wanna help with cloud sync, GUI (Tauri), or encryption enhancements?  
+PRs and issues are welcome!
 
 ---
 
-Made with ❤️ by Oche.
+## 📜 License
+
+MIT — use it, hack it, ship it.
+
+---
+
+Built with Go & love by [@OcheOps](https://github.com/OcheOps) 🚰
