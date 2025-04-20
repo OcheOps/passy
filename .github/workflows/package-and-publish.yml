@@ -6,35 +6,36 @@ on:
       - 'v*.*.*'
 
 jobs:
-  build-and-push:
+  build-and-publish:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: 🧾 Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Go
+    - name: ⚙️ Set up Go
       uses: actions/setup-go@v4
       with:
         go-version: '1.21'
 
-    - name: Install required build tools
+    - name: 🧱 Install required tools (Go, FPM, RPM, APT, createrepo)
       run: |
         sudo apt-get update
         sudo apt-get install -y \
           ruby ruby-dev build-essential \
-          rpm createrepo-c dpkg-dev \
+          rpm dpkg-dev python3-pip \
           libx11-dev xorg-dev
         sudo gem install --no-document fpm
+        sudo pip3 install createrepo_c
 
-    - name: Build binary and packages
+    - name: 🔨 Build binary and create .deb/.rpm packages
       run: |
         mkdir -p bin dist
         go build -o bin/passy main.go
         fpm -s dir -t deb -n passy -v ${{ github.ref_name }} -p dist/passy_${{ github.ref_name }}_amd64.deb bin/passy=/usr/local/bin/passy
         fpm -s dir -t rpm -n passy -v ${{ github.ref_name }} -p dist/passy-${{ github.ref_name }}.x86_64.rpm bin/passy=/usr/local/bin/passy
 
-    - name: Push .deb to passy-apt-repo
+    - name: 📦 Push .deb to APT repo
       run: |
         git clone https://x-access-token:${{ secrets.REPO_PUSH_TOKEN }}@github.com/OcheOps/passy-apt-repo.git
         mkdir -p passy-apt-repo/pool/main/p/passy
@@ -44,10 +45,10 @@ jobs:
         git config user.name "github-actions"
         git config user.email "actions@github.com"
         git add .
-        git commit -m "Add .deb for ${{ github.ref_name }}" || echo "No changes to commit"
+        git commit -m "📦 Add .deb for ${{ github.ref_name }}" || echo "Nothing to commit"
         git push
 
-    - name: Push .rpm to passy-rpm-repo
+    - name: 📦 Push .rpm to RPM repo
       run: |
         git clone https://x-access-token:${{ secrets.REPO_PUSH_TOKEN }}@github.com/OcheOps/passy-rpm-repo.git
         mkdir -p passy-rpm-repo/packages
@@ -57,5 +58,5 @@ jobs:
         git config user.name "github-actions"
         git config user.email "actions@github.com"
         git add .
-        git commit -m "Add .rpm for ${{ github.ref_name }}" || echo "No changes to commit"
+        git commit -m "📦 Add .rpm for ${{ github.ref_name }}" || echo "Nothing to commit"
         git push
