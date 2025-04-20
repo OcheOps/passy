@@ -50,8 +50,6 @@ jobs:
         git push
 
     - name: 📦 Push .rpm to RPM repo (with createrepo PATH fix)
-      env:
-        PATH: ${{ env.HOME }}/.local/bin:${{ env.PATH }}
       run: |
         git clone https://x-access-token:${{ secrets.REPO_PUSH_TOKEN }}@github.com/OcheOps/passy-rpm-repo.git
         mkdir -p passy-rpm-repo/packages
