@@ -26,7 +26,8 @@ jobs:
           rpm dpkg-dev python3-pip \
           libx11-dev xorg-dev
         sudo gem install --no-document fpm
-        sudo pip3 install createrepo_c
+        sudo pip3 install --break-system-packages --user createrepo_c
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
 
     - name: 🔨 Build binary and create .deb/.rpm packages
       run: |
