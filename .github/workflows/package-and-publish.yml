@@ -55,7 +55,7 @@ jobs:
         mkdir -p passy-rpm-repo/packages
         cp dist/*.rpm passy-rpm-repo/packages/
         cd passy-rpm-repo
-        $HOME/.local/bin/createrepo .
+        $HOME/.local/bin/createrepo_c .
         git config user.name "github-actions"
         git config user.email "actions@github.com"
         git add .
