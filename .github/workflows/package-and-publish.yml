@@ -18,7 +18,7 @@ jobs:
       with:
         go-version: '1.21'
 
-    - name: 🧱 Install required tools (Go, FPM, RPM, APT, createrepo)
+    - name: 🧱 Install build tools (Go, FPM, RPM, APT, createrepo)
       run: |
         sudo apt-get update
         sudo apt-get install -y \
@@ -49,13 +49,15 @@ jobs:
         git commit -m "📦 Add .deb for ${{ github.ref_name }}" || echo "Nothing to commit"
         git push
 
-    - name: 📦 Push .rpm to RPM repo
+    - name: 📦 Push .rpm to RPM repo (with createrepo PATH fix)
+      env:
+        PATH: ${{ env.HOME }}/.local/bin:${{ env.PATH }}
       run: |
         git clone https://x-access-token:${{ secrets.REPO_PUSH_TOKEN }}@github.com/OcheOps/passy-rpm-repo.git
         mkdir -p passy-rpm-repo/packages
         cp dist/*.rpm passy-rpm-repo/packages/
         cd passy-rpm-repo
-        createrepo .
+        $HOME/.local/bin/createrepo .
         git config user.name "github-actions"
         git config user.email "actions@github.com"
         git add .
