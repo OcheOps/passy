@@ -176,7 +176,7 @@ Issues and pull requests are welcome! Ideas that would make a big difference:
 
 ## 📜 License
 
-MIT — use it, hack it, ship it.
+[MIT](LICENSE) — use it, hack it, ship it.
 
 ---
 

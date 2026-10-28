@@ -1,0 +1,9 @@
+# Build output
+/passy
+/bin/
+/dist/
+*.exe
+
+# Local vault and exports
+passy.db
+*.csv
