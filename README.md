@@ -48,7 +48,13 @@ sudo apt update && sudo apt install passy
 ### 📦 DNF (Fedora / RHEL)
 
 ```bash
-sudo dnf config-manager --add-repo https://ocheops.github.io/passy-rpm-repo/passsy.repo
+sudo tee /etc/yum.repos.d/passy.repo <<EOF
+[passy]
+name=Passy CLI
+baseurl=https://ocheops.github.io/passy-rpm-repo
+enabled=1
+gpgcheck=0
+EOF
 ```
 
 ```bash
