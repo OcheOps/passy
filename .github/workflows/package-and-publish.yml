@@ -16,7 +16,7 @@ jobs:
     - name: ⚙️ Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: '1.21'
+        go-version-file: go.mod
 
     - name: 🧱 Install build tools
       run: |
@@ -31,8 +31,11 @@ jobs:
       run: |
         mkdir -p bin dist
         go build -o bin/passy main.go
-        fpm -s dir -t deb -n passy -v ${{ github.ref_name }} -p dist/passy_${{ github.ref_name }}_amd64.deb bin/passy=/usr/local/bin/passy
-        fpm -s dir -t rpm -n passy -v ${{ github.ref_name }} -p dist/passy-${{ github.ref_name }}.x86_64.rpm bin/passy=/usr/local/bin/passy
+        FPM_META=(--description "Simple terminal password manager with an encrypted local vault"
+                  --license MIT --url https://github.com/OcheOps/passy
+                  --maintainer "OcheOps <ochecodes@gmail.com>" --vendor OcheOps)
+        fpm -s dir -t deb -n passy -v ${{ github.ref_name }} "${FPM_META[@]}" -p dist/passy_${{ github.ref_name }}_amd64.deb bin/passy=/usr/local/bin/passy
+        fpm -s dir -t rpm -n passy -v ${{ github.ref_name }} "${FPM_META[@]}" -p dist/passy-${{ github.ref_name }}.x86_64.rpm bin/passy=/usr/local/bin/passy
 
     - name: 📦 Push .deb to APT repo
       run: |
